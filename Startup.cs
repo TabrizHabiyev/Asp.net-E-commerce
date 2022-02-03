@@ -49,9 +49,17 @@ namespace Asp.net_E_commerce
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                   "areas",
+                  "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
+                 );
+
+
+                endpoints.MapControllerRoute(
+                    "default",
+                    "{controller=home}/{action=Index}/{id?}"
+                    );
             });
+
         }
     }
 }

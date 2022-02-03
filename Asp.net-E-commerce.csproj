@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Asp.net_E_commerce</RootNamespace>
+    <UserSecretsId>38d04dc7-e7eb-4ade-ba28-faf007d83ff8</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
 
 </Project>
