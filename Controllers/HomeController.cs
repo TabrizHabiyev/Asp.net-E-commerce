@@ -24,7 +24,9 @@ namespace Asp.net_E_commerce.Controllers
         public IActionResult Index()
         {
             List<SliderCompany> slider = _context.SliderCompany.ToList();
+            List<FeaturesBanner> banners = _context.FeaturesBanners.ToList();
             ViewData["SliderCompany"] = slider;
+            ViewData["FeaturesBanner"] = banners;
             return View();
         }
 
