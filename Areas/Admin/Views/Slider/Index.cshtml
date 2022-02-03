@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SliderCompany>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Company Slider</h4>
+            <p class="card-description">
+                <a asp-controller="Slider" asp-action="Create" class="btn btn-success">Create</a>
+            </p>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Photo
+                            </th>
+                            <th>
+                                Company Name
+                            </th>
+                            <th>
+                                Settings
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img style="width:138px!important;height:92px!important" src="~/assets/images/brand/@item.Url"/>
+                                </td>
+                                <td>
+                                   @item.Name
+                                </td>
+                                <td>
+                                    <a asp-controller="Slider" asp-action="Update" asp-route-id="@item.Id" class="btn btn-success"><i class="mdi mdi-table-edit"></i></a>
+                                    <a asp-controller="Slider" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="mdi mdi-delete"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

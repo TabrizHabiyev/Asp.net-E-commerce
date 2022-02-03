@@ -1,48 +1,168 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<!doctype html>
+<html class="no-js" lang="en">
+
+
+<!-- Mirrored from demo.hasthemes.com/allup/allup/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 04 Sep 2020 10:46:32 GMT -->
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Asp.net_E_commerce</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <meta charset="utf-8">
+
+    <!--====== Title ======-->
+    <title>Allup - Electronics Responsive eCommerce HTML Template.</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--====== Favicon Icon ======-->
+    <link rel="shortcut icon" href="~/assets/images/favicon.png" type="image/png">
+
+
+    <!-- CSS
+    ============================================ -->
+    <!--===== Vendor CSS (Bootstrap & Icon Font) =====-->
+
+    <link rel="stylesheet" href="~/assets/css/plugins/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/ionicons.min.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/fontawesome.min.css">
+
+    <!--===== Plugins CSS (All Plugins Files) =====-->
+
+    <link rel="stylesheet" href="~/assets/css/plugins/slick.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/animate.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/jquery-ui.min.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/default.css">
+
+    <!--====== Main Style CSS ======-->
+    <link rel="stylesheet" href="~/assets/css/style.css">
+
+    <!--====== Use the minified version files listed below for better performance and remove the files listed above ======-->
+    <!-- <link rel="stylesheet" href="assets/css/vendor/plugins.min.css">
+    <link rel="stylesheet" href="assets/css/style.min.css"> -->
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Asp.net_E_commerce</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+    <!--====== PRELOADER PART START ======-->
+
+    <div id="preloader">
+        <div class="preloader">
+            <span></span>
+            <span></span>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Asp.net_E_commerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+    <!--====== PRELOADER PART ENDS ======-->
+
+
+    @RenderBody()
+
+
+    <!--====== Footer Part Start ======-->
+    <section class="footer-area bg_cover" style="background-image: url(assets/images/bg-footer.jpg)">
+        <div class="footer-widget pt-30 pb-70">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="footer-contact mt-50">
+                            <h4 class="footer-title">Contact Details</h4>
+
+                            <ul>
+                                <li><i class="fas fa-map-marker-alt"></i> 45 Grand Central Terminal New York,NY 1017 United State USA</li>
+                                <li><i class="fas fa-phone"></i> <a href="tell:123-456-789">+123 456 789</a></li>
+                                <li><i class="fas fa-envelope"></i><a href="mailto://email@yourwebsitename.com">email@yourwebsitename.com</a></li>
+                                <li><i class="far fa-clock"></i> Mon-Sat 9:00pm - 5:00pm Sun:Closed</li>
+                            </ul>
+                        </div> <!-- footer contact -->
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="footer-link-wrapper d-flex flex-wrap justify-content-between">
+                            <div class="footer-link mt-50">
+                                <h4 class="footer-title">Information</h4>
+
+                                <ul class="link">
+                                    <li><a href="#">Delivery</a></li>
+                                    <li><a href="#">Legal Notice</a></li>
+                                    <li><a href="about.html">About us</a></li>
+                                    <li><a href="#">Secure payment</a></li>
+                                    <li><a href="contact.html">Contact us</a></li>
+                                </ul>
+                            </div> <!-- footer link -->
+                            <div class="footer-link mt-50">
+                                <h4 class="footer-title">Customer</h4>
+
+                                <ul class="link">
+                                    <li><a href="shop-4-column.html">Prices drop</a></li>
+                                    <li><a href="shop-4-column.html">New Product</a></li>
+                                    <li><a href="shop-3-column.html">Best Sales</a></li>
+                                    <li><a href="#">Sitemap</a></li>
+                                    <li><a href="login.html">Login</a></li>
+                                </ul>
+                            </div> <!-- footer link -->
+                            <div class="footer-link mt-50">
+                                <h4 class="footer-title">About Us</h4>
+
+                                <ul class="link">
+                                    <li><a href="#">About Our Shop</a></li>
+                                    <li><a href="#">Secure Shopping </a></li>
+                                    <li><a href="#">Delivery infomation </a></li>
+                                    <li><a href="#">Store Locations </a></li>
+                                    <li><a href="#">Affiliates </a></li>
+                                </ul>
+                            </div> <!-- footer link -->
+                            <div class="footer-link mt-50">
+                                <h4 class="footer-title">My account</h4>
+
+                                <ul class="link">
+                                    <li><a href="#">Personal info</a></li>
+                                    <li><a href="#">Order</a></li>
+                                    <li><a href="#">Credit Slips</a></li>
+                                    <li><a href="#">Address</a></li>
+                                </ul>
+                            </div> <!-- footer link -->
+                        </div> <!-- footer link wrapper -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- footer widget -->
+
+        <div class="footer-copyright">
+            <div class="container">
+                <div class="footer-copyright-payment text-center d-lg-flex justify-content-between align-items-center">
+                    <div class="copyright-text">
+                        <p>Copyright 2020 &copy; <a href="https://hasthemes.com/">HasThemes</a> . All Rights Reserved</p>
+                    </div>
+                    <div class="payment">
+                        <img src="assets/images/payment.png" alt="payment">
+                    </div>
+                </div> <!-- footer copyright payment -->
+            </div> <!-- container -->
+        </div> <!-- footer copyright -->
+    </section>
+
+    <!--====== Footer Part Ends ======-->
+    <!--====== BACK TOP TOP PART START ======-->
+
+    <a href="#" class="back-to-top"><i class="ion-android-arrow-up"></i></a>
+
+    <!--====== BACK TOP TOP PART ENDS ======-->
+    <!--====== Vendors js ======-->
+    <script src="~/assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="~/assets/js/vendor/modernizr-3.7.1.min.js"></script>
+
+    <!--====== Plugins js ======-->
+    <script src="~/assets/js/plugins/popper.min.js"></script>
+    <script src="~/assets/js/plugins/bootstrap.min.js"></script>
+    <script src="~/assets/js/plugins/slick.min.js"></script>
+    <script src="~/assets/js/plugins/jquery.countdown.min.js"></script>
+    <script src="~/assets/js/plugins/jquery-ui.min.js"></script>
+
+
+    <!--====== Use the minified version files listed below for better performance and remove the files listed above ======-->
+    <!-- <script src="assets/js/plugins.min.js"></script> -->
+    <!--====== Main Activation js ======-->
+    <script src="~/assets/js/main.js"></script>
+
 </body>
+
+
+<!-- Mirrored from demo.hasthemes.com/allup/allup/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 04 Sep 2020 10:47:43 GMT -->
 </html>
+

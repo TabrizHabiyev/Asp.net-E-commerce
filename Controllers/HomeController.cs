@@ -1,4 +1,5 @@
-﻿using Asp.net_E_commerce.Models;
+﻿using Asp.net_E_commerce.DAL;
+using Asp.net_E_commerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,12 +12,13 @@ namespace Asp.net_E_commerce.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly Context _context;
+        public HomeController(Context context)
         {
-            _logger = logger;
+            _context = context;
         }
+
 
         public IActionResult Index()
         {
