@@ -12,10 +12,7 @@ using System.Threading.Tasks;
 
 namespace Asp.net_E_commerce.Areas.Admin.Controllers
 {
-
     [Area("Admin")]
-
-
 
     public class SliderController : Controller
     {
@@ -145,7 +142,5 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-
     }
 }
