@@ -12,6 +12,10 @@ namespace Asp.net_E_commerce.Models
         [Required, StringLength(maximumLength: 50)]
         public string FullName { get; set; }
         public bool IsActive { get; set; }
+        public string Avatar { get; set; }
 
+        [Required]
+        public string Gender { get; set; }
+        public bool Newsletter { get; set; }
     }
 }
