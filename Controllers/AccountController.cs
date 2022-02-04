@@ -29,15 +29,33 @@ namespace Asp.net_E_commerce.Controllers
             _roleManager = roleManager;
             _config = config;
         }
+
+
         public IActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Account");
+            }
             return View();
         }
+
+
+        public async Task<IActionResult> Index() 
+        {
+            AppUser appUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            return View(appUser);
+        }
+
+
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Register(RegisterVM register)
         {
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Account");
+
             if (!ModelState.IsValid) return View();
 
             AppUser user = new AppUser
@@ -103,15 +121,10 @@ namespace Asp.net_E_commerce.Controllers
 
             IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
 
-            TempData["success"] = "Email verified successfully, You can login";
+            TempData["successConfirimEmail"] = "Email verified successfully, You can login";
             return RedirectToAction("Login", "Account");
         }
 
-
-        public IActionResult CheckSignIn()
-        {
-            return Content(User.Identity.IsAuthenticated.ToString());
-        }
 
 
         public IActionResult Login()
@@ -119,12 +132,74 @@ namespace Asp.net_E_commerce.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Account");
             }
             return View();
         }
 
 
+        
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> Login(LoginVM login)
+        {
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Account");
+
+            if (!ModelState.IsValid) return View();
+
+            AppUser dbUser = await _userManager.FindByNameAsync(login.UserName);
+
+
+            if (dbUser == null)
+            {
+                ModelState.AddModelError("", "UserName or Password invalid");
+                return View();
+            }
+
+            bool emailConfirim = dbUser.EmailConfirmed;
+            var roles = await _userManager.GetRolesAsync(dbUser);
+
+            if (roles[0] != "Admin" && !emailConfirim)
+            {
+                ModelState.AddModelError("", "Verify your email address to login");
+                return View();
+            }
+
+            if (!dbUser.IsActive)
+            {
+                ModelState.AddModelError("", "user is deactive");
+                return View();
+            }
+
+
+            var singInResult = await _signInManager.PasswordSignInAsync(dbUser, login.Password, true, true);
+
+
+            if (singInResult.IsLockedOut)
+            {
+                ModelState.AddModelError("", "is lockout");
+                return View();
+            }
+
+            if (!singInResult.Succeeded)
+            {
+                ModelState.AddModelError("", "UserName or Password invalid");
+                return View();
+            }
+
+            
+            if (roles[0] == "Admin")
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            };
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+
+
+        // Create role
         public async Task CreateRole()
         {
             if (!await _roleManager.RoleExistsAsync("Admin"))
