@@ -28,7 +28,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
         // GET: FeaturesBannerController
         public ActionResult Index()
         {
-            List<FeaturesBanner> sliders = _context.FeaturesBanners.ToList();
+            List<FeaturesBanner> sliders = _context.featuresBanners.ToList();
             return View(sliders);
         }
 
@@ -73,7 +73,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
             string fileName = await featuresBanner.Photo.SaveImageAsync(_env.WebRootPath, "assets/images/");
             newFeacture.Url = fileName;
             newFeacture.Description = featuresBanner.Description;
-            await _context.FeaturesBanners.AddAsync(newFeacture);
+            await _context.featuresBanners.AddAsync(newFeacture);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
@@ -83,7 +83,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
         public async Task<ActionResult> Update(int? id)
         {
             if (id == null) return NotFound();
-            FeaturesBanner dbFeature = await _context.FeaturesBanners.FindAsync(id);
+            FeaturesBanner dbFeature = await _context.featuresBanners.FindAsync(id);
             if (dbFeature == null) return NotFound();
             return View(dbFeature);
         }
@@ -113,7 +113,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
                     ModelState.AddModelError("Photo", "300den yuxari ola bilmez");
                     return View();
                 }
-                FeaturesBanner dbfeatures = await _context.FeaturesBanners.FindAsync(id);
+                FeaturesBanner dbfeatures = await _context.featuresBanners.FindAsync(id);
 
                 string path = Path.Combine(_env.WebRootPath, "assets/images/brand/", dbfeatures.Url);
 
@@ -135,7 +135,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
-          FeaturesBanner dbFeatures = await _context.FeaturesBanners.FindAsync(id);
+          FeaturesBanner dbFeatures = await _context.featuresBanners.FindAsync(id);
             if (dbFeatures == null) return NotFound();
 
             string path = Path.Combine(_env.WebRootPath, "assets/images/", dbFeatures.Url);
@@ -143,7 +143,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
             {
                 System.IO.File.Delete(path);
             }
-            _context.FeaturesBanners.Remove(dbFeatures);
+            _context.featuresBanners.Remove(dbFeatures);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

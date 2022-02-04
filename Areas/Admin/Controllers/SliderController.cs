@@ -29,7 +29,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
         // GET: SliderController
         public ActionResult Index()
         {
-            List<SliderCompany> sliders = _context.SliderCompany.ToList();
+            List<SliderCompany> sliders = _context.sliderCompany.ToList();
             return View(sliders);
         }
 
@@ -66,7 +66,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
             string fileName = await slider.Photo.SaveImageAsync(_env.WebRootPath, "assets/images/brand/");
             newSlider.Url = fileName;
 
-            await _context.SliderCompany.AddAsync(newSlider);
+            await _context.sliderCompany.AddAsync(newSlider);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
@@ -78,7 +78,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
         public async Task<ActionResult> Update(int? id)
         {
             if (id == null) return NotFound();
-            SliderCompany dbSlider = await _context.SliderCompany.FindAsync(id);
+            SliderCompany dbSlider = await _context.sliderCompany.FindAsync(id);
             if (dbSlider == null) return NotFound();
             return View(dbSlider);
         }
@@ -109,7 +109,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
                     ModelState.AddModelError("Photo", "300den yuxari ola bilmez");
                     return View();
                 }
-                SliderCompany dbSlider = await _context.SliderCompany.FindAsync(id);
+                SliderCompany dbSlider = await _context.sliderCompany.FindAsync(id);
                 string path = Path.Combine(_env.WebRootPath, "assets/images/brand/", dbSlider.Url);
                
                 if (System.IO.File.Exists(path))
@@ -129,7 +129,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
         public async Task<IActionResult>  Delete(int? id)
         {
             if (id == null) return NotFound();
-            SliderCompany dbSlider = await _context.SliderCompany.FindAsync(id);
+            SliderCompany dbSlider = await _context.sliderCompany.FindAsync(id);
             if (dbSlider == null) return NotFound();
 
             string path = Path.Combine(_env.WebRootPath, "assets/images/brand/", dbSlider.Url);
@@ -137,7 +137,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
             {
                 System.IO.File.Delete(path);
             }
-            _context.SliderCompany.Remove(dbSlider);
+            _context.sliderCompany.Remove(dbSlider);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

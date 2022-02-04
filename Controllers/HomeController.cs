@@ -23,8 +23,8 @@ namespace Asp.net_E_commerce.Controllers
 
         public IActionResult Index()
         {
-            List<SliderCompany> slider = _context.SliderCompany.ToList();
-            List<FeaturesBanner> banners = _context.FeaturesBanners.ToList();
+            List<SliderCompany> slider = _context.sliderCompany.ToList();
+            List<FeaturesBanner> banners = _context.featuresBanners.ToList();
             ViewData["SliderCompany"] = slider;
             ViewData["FeaturesBanner"] = banners;
             return View();
@@ -48,7 +48,7 @@ namespace Asp.net_E_commerce.Controllers
         // Copany Slider partial
         public IActionResult CompanySlider()
         {
-            List<SliderCompany> slider = _context.SliderCompany.ToList();
+            List<SliderCompany> slider = _context.sliderCompany.ToList();
             return PartialView("_CompanySliderPartial" , slider);
         }
 

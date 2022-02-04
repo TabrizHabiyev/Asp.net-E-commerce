@@ -15,9 +15,9 @@ namespace Asp.net_E_commerce.DAL
 
         }
 
-        public DbSet<SliderCompany> SliderCompany { get; set; }
-
-        public DbSet<FeaturesBanner> FeaturesBanners { get; set; }
+        public DbSet<SliderCompany> sliderCompany { get; set; }
+        public DbSet<ContactDetails> contactDetails { get; set; }
+        public DbSet<FeaturesBanner> featuresBanners { get; set; }
 
     }
 }
