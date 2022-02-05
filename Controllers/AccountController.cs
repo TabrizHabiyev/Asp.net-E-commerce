@@ -1,4 +1,6 @@
-﻿using Asp.net_E_commerce.Models;
+﻿using Asp.net_E_commerce.DAL;
+using Asp.net_E_commerce.Models;
+using Asp.net_E_commerce.Services;
 using Asp.net_E_commerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,16 +20,18 @@ namespace Asp.net_E_commerce.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly Context _context;
         private readonly IConfiguration _config;
 
         public AccountController(
             UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-            RoleManager<IdentityRole> roleManager, IConfiguration config)
+            RoleManager<IdentityRole> roleManager, IConfiguration config, Context context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _config = config;
+            _context = context;
         }
 
 
@@ -43,11 +47,10 @@ namespace Asp.net_E_commerce.Controllers
 
         public async Task<IActionResult> Index() 
         {
+            if (!User.Identity.IsAuthenticated) return RedirectToAction("Index","Home");
             AppUser appUser = await _userManager.FindByNameAsync(User.Identity.Name);
-
             return View(appUser);
         }
-
 
 
         [HttpPost]
@@ -80,11 +83,34 @@ namespace Asp.net_E_commerce.Controllers
                 return View();
             }
 
+            CustomerMailList isExists = _context.customerMailLists.FirstOrDefault(x => x.Mail == register.Email);
+
+            if (isExists == null)
+            {
+                if (register.Newsletter == true)
+                {
+                    CustomerMailList customerMailList = new CustomerMailList();
+                    customerMailList.Mail = register.Email;
+                    customerMailList.IsSubscriber = true;
+                    await _context.AddAsync(customerMailList);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    CustomerMailList customerMailList = new CustomerMailList();
+                    customerMailList.Mail = register.Email;
+                    customerMailList.IsSubscriber = false;
+                    await _context.AddAsync(customerMailList);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
             await _userManager.AddToRoleAsync(user, "Member");
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             var ConfirimLink = Url.Action(nameof(EmailConfirm), "Account", new { email = user.Email, token }, Request.Scheme);
+
 
             using (MailMessage mail = new MailMessage())
             {
@@ -196,7 +222,11 @@ namespace Asp.net_E_commerce.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
 
 
         // Create role

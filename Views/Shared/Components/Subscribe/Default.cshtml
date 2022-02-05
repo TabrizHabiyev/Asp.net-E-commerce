@@ -1,0 +1,20 @@
+﻿@model Subscribe
+ <section class="newsletter-area pt-100 pb-100 bg_cover" style="background-image: url(@Model.PhotoUrl)">
+        <div class="container">
+            <div class="row justify-content-end">
+                <div class="col-lg-8">
+                    <div class="newsletter-content">
+                        <h2 class="newsletter-title">@Model.Title</h2>
+                        <p>@Model.Desciription</p>
+
+                        <div class="newsletter-forn">
+                            <form asp-controller="MailLists" asp-action="Subscribe">
+                                <input type="email" name="email" placeholder="Your Email address">
+                                <button type="submit" class="main-btn">Subscribe</button>
+                            </form>
+                        </div>
+                    </div> <!-- newsletter content -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>

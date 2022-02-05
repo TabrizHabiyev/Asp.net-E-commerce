@@ -48,7 +48,6 @@
             <span></span>
         </div>
     </div>
-
     <!--====== PRELOADER PART ENDS ======-->
     <!--====== Header Part Start ======-->
     @await Component.InvokeAsync("Header")
@@ -56,6 +55,11 @@
 
 
     @RenderBody()
+
+
+    <!--====== Newsletter Part Start ======-->
+    @await Component.InvokeAsync("Subscribe")
+    <!--====== Newsletter Part Ends ======-->
 
 
     <!--====== Footer Part Start ======-->
@@ -82,7 +86,6 @@
     <!-- <script src="assets/js/plugins.min.js"></script> -->
     <!--====== Main Activation js ======-->
     <script src="~/assets/js/main.js"></script>
-
 </body>
 
 

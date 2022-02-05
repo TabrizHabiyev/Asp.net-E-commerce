@@ -1,5 +1,4 @@
 ﻿using Asp.net_E_commerce.DAL;
-using Asp.net_E_commerce.Migrations;
 using Asp.net_E_commerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -44,7 +43,6 @@ namespace Asp.net_E_commerce.Controllers
 
 
         // Partials
-
         // Copany Slider partial
         public IActionResult CompanySlider()
         {
