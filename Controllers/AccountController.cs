@@ -2,12 +2,16 @@
 using Asp.net_E_commerce.Models;
 using Asp.net_E_commerce.Services;
 using Asp.net_E_commerce.ViewModels;
+using Asp.net_E_commerce.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -17,6 +21,7 @@ namespace Asp.net_E_commerce.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IWebHostEnvironment _env;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -25,13 +30,15 @@ namespace Asp.net_E_commerce.Controllers
 
         public AccountController(
             UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-            RoleManager<IdentityRole> roleManager, IConfiguration config, Context context)
+            RoleManager<IdentityRole> roleManager, IWebHostEnvironment env,
+            IConfiguration config, Context context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _config = config;
             _context = context;
+            _env = env;
         }
 
 
@@ -220,6 +227,104 @@ namespace Asp.net_E_commerce.Controllers
             };
 
             return RedirectToAction("Index", "Home");
+        }
+
+
+
+        public async Task<IActionResult> DeleteFoto()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Account");
+            }
+
+            AppUser dbUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            string path = Path.Combine(_env.WebRootPath, dbUser.Avatar);
+            string userAvatar = dbUser.Avatar;
+
+            if (userAvatar != "assets/images/Avatar/woman.png" && userAvatar != "assets/images/Avatar/man.png")
+            {
+                System.IO.File.Delete(path);
+                dbUser.Avatar = (dbUser.Gender == "Woman") ? "assets/images/Avatar/woman.png" : "assets/images/Avatar/man.png";
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index", "Account");
+        }
+
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> Edit(string FirstName,string LastName,string Email,
+        string Gender,string Password,string NewPassword,string ConfirmPassword, IFormFile photo) 
+        {
+
+            AppUser dbUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            string fileName = dbUser.Avatar;
+
+            if (photo != null)
+            {
+                if (!photo.IsImage())
+                {
+                    ViewData["ResponsError"] = "Only image";
+                    return RedirectToAction("Index", "Account");
+                }
+                if (photo.IsCorrectSize(3000))
+                {
+                    ViewData["ResponsError"] = "Photo can be max 15mb";
+                    return RedirectToAction("Index", "Account");
+                }
+                fileName = "assets/images/Avatar/" + await photo.SaveImageAsync(_env.WebRootPath, "assets/images/Avatar/");
+            }
+
+
+            AppUser isExist = await _userManager.FindByEmailAsync(Email);
+            if (isExist != null)
+            {
+                if (isExist.UserName != User.Identity.Name)
+                {
+                    ViewData["ResponsError"] = "This Email address is available";
+                    return RedirectToAction("Index", "Account");
+                }
+
+            }
+
+            bool changePassword = false;
+            if (NewPassword != null)
+            {
+                if (NewPassword == ConfirmPassword)
+                {
+                    var singInResult = await _signInManager.PasswordSignInAsync(dbUser, Password, true, true);
+
+                    if (!singInResult.Succeeded)
+                    {
+                        ViewData["ResponsError"] = "Old password is not correct";
+                        return RedirectToAction("Index", "Account");
+                    }
+                }
+                else
+                {
+                    ViewData["ResponsError"] = "New passwords do not match";
+                    return RedirectToAction("Index", "Account");
+                }
+                changePassword = true;
+            }
+
+            dbUser.FullName = FirstName + " " + LastName;
+            dbUser.Email = Email;
+            dbUser.Gender = Gender;
+
+            dbUser.Avatar = fileName;
+
+            await _userManager.RemovePasswordAsync(dbUser);
+
+            if (changePassword == true)
+            {
+                await _userManager.AddPasswordAsync(dbUser, NewPassword);
+            }
+
+            return RedirectToAction("Index", "Account");
         }
 
         public async Task<IActionResult> LogOut()

@@ -1,6 +1,6 @@
 ﻿using Asp.net_E_commerce.DAL;
 using Asp.net_E_commerce.Models;
-using FrontToBack.Extensions;
+using Asp.net_E_commerce.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
