@@ -261,7 +261,7 @@ namespace Asp.net_E_commerce.Controllers
         {
 
             AppUser dbUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            string fileName = dbUser.Avatar;
+            string fileName = (Gender == "Woman") ? "assets/images/Avatar/woman.png" : "assets/images/Avatar/man.png";
 
             if (photo != null)
             {
@@ -317,13 +317,12 @@ namespace Asp.net_E_commerce.Controllers
 
             dbUser.Avatar = fileName;
 
-            await _userManager.RemovePasswordAsync(dbUser);
-
             if (changePassword == true)
             {
+                await _userManager.RemovePasswordAsync(dbUser);
                 await _userManager.AddPasswordAsync(dbUser, NewPassword);
             }
-
+            await  _context.SaveChangesAsync();
             return RedirectToAction("Index", "Account");
         }
 
@@ -347,5 +346,88 @@ namespace Asp.net_E_commerce.Controllers
             }
         }
 
+
+        //Forget password
+        public IActionResult ForgetPassword()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword(ForgotPassword model)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(model.User.Email);
+            if (user == null) return NotFound();
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var link = Url.Action(nameof(ResetPassword), "Account", new { email = user.Email, token }, Request.Scheme);
+
+            using (MailMessage mail = new MailMessage())
+            {
+                string mailFrom = _config["SMTP_CONNECTION_STRING:SmtpMail"];
+                string mailTo = model.User.Email;
+                string smtpClient = _config["SMTP_CONNECTION_STRING:SmtpClient"];
+                string smtpMailPassword = _config["SMTP_CONNECTION_STRING:SmtpMailPassword"];
+                int smtpPort = Convert.ToInt32(_config["SMTP_CONNECTION_STRING:SmtpPort"]);
+
+                mail.From = new MailAddress(mailFrom);
+                mail.To.Add(mailTo);
+                mail.Subject = "Reset Password";
+                mail.Body = $"<a href={link}>Got to reset password</a>";
+                mail.IsBodyHtml = true;
+                using (SmtpClient smtp = new SmtpClient(smtpClient, smtpPort))
+                {
+                    smtp.Credentials = new NetworkCredential(mailFrom, smtpMailPassword);
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                }
+                return RedirectToAction("Index","Home");
+            }
+        }
+
+        public async Task<IActionResult> ResetPassword(string email, string token)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null) return NotFound();
+
+            ForgotPassword forgetPassword = new ForgotPassword
+            {
+                Token = token,
+                User = user
+            };
+            return View(forgetPassword);
+        }
+
+        [HttpPost]
+        [ActionName("ResetPassword")]
+        public async Task<IActionResult> Reset(ForgotPassword model)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(model.User.Email);
+            if (user == null) return NotFound();
+
+            ForgotPassword forgetPassword = new ForgotPassword
+            {
+                Token = model.Token,
+                User = model.User
+            };
+
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+
+            foreach (var item in result.Errors)
+            {
+                ModelState.AddModelError("", item.Description);
+            }
+            await _signInManager.PasswordSignInAsync(user, model.Password, true, true);
+
+            TempData["ResponsResetPassword"] = "Your password has been successfully changed";
+            return RedirectToAction("Index","Account");
+        }
     }
 }

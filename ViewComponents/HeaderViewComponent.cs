@@ -1,5 +1,6 @@
 ﻿using Asp.net_E_commerce.DAL;
 using Asp.net_E_commerce.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,25 @@ namespace Asp.net_E_commerce.ViewComponents
     public class HeaderViewComponent : ViewComponent
     {
         private readonly Context _context;
-        public HeaderViewComponent(Context context)
+        private readonly UserManager<AppUser> _userManager;
+        public HeaderViewComponent(Context context, UserManager<AppUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            ContactDetails contactDetails = _context.contactDetails.FirstOrDefault();
-
-            return View(await Task.FromResult(contactDetails));
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user != null)
+                {
+                    ViewBag.Username = user.FullName;
+                    ViewBag.UserAvatar = user.Avatar;
+                }
+            }
+            return View();
         }
     }
 }

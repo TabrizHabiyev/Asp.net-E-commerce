@@ -1,5 +1,6 @@
 ﻿using Asp.net_E_commerce.DAL;
 using Asp.net_E_commerce.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,16 +15,18 @@ namespace Asp.net_E_commerce.Controllers
     {
 
         private readonly Context _context;
+      
         public HomeController(Context context)
         {
             _context = context;
         }
 
 
-        public IActionResult Index()
+        public  IActionResult Index()
         {
             List<SliderCompany> slider = _context.sliderCompany.ToList();
             List<FeaturesBanner> banners = _context.featuresBanners.ToList();
+
             ViewData["SliderCompany"] = slider;
             ViewData["FeaturesBanner"] = banners;
             return View();
