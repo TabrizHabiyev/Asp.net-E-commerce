@@ -52,9 +52,9 @@ namespace Asp.net_E_commerce.Controllers
         }
 
 
-        public async Task<IActionResult> Index() 
+        public async Task<IActionResult> Index()
         {
-            if (!User.Identity.IsAuthenticated) return RedirectToAction("Index","Home");
+            if (!User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
             AppUser appUser = await _userManager.FindByNameAsync(User.Identity.Name);
             return View(appUser);
         }
@@ -171,7 +171,7 @@ namespace Asp.net_E_commerce.Controllers
         }
 
 
-        
+
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Login(LoginVM login)
@@ -220,7 +220,7 @@ namespace Asp.net_E_commerce.Controllers
                 return View();
             }
 
-            
+
             if (roles[0] == "Admin")
             {
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
@@ -256,30 +256,29 @@ namespace Asp.net_E_commerce.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Edit(string FirstName,string LastName,string Email,
-        string Gender,string Password,string NewPassword,string ConfirmPassword, IFormFile photo) 
+        public async Task<IActionResult> Edit([FromForm] UserEditProfile userEditProfile)
         {
 
             AppUser dbUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            string fileName = (Gender == "Woman") ? "assets/images/Avatar/woman.png" : "assets/images/Avatar/man.png";
+            string fileName = (userEditProfile.Gender == "Woman") ? "assets/images/Avatar/woman.png" : "assets/images/Avatar/man.png";
 
-            if (photo != null)
+            if (userEditProfile.photo != null)
             {
-                if (!photo.IsImage())
+                if (!userEditProfile.photo.IsImage())
                 {
                     ViewData["ResponsError"] = "Only image";
                     return RedirectToAction("Index", "Account");
                 }
-                if (photo.IsCorrectSize(3000))
+                if (userEditProfile.photo.IsCorrectSize(3000))
                 {
                     ViewData["ResponsError"] = "Photo can be max 15mb";
                     return RedirectToAction("Index", "Account");
                 }
-                fileName = "assets/images/Avatar/" + await photo.SaveImageAsync(_env.WebRootPath, "assets/images/Avatar/");
+                fileName = "assets/images/Avatar/" + await userEditProfile.photo.SaveImageAsync(_env.WebRootPath, "assets/images/Avatar/");
             }
 
 
-            AppUser isExist = await _userManager.FindByEmailAsync(Email);
+            AppUser isExist = await _userManager.FindByEmailAsync(userEditProfile.Email);
             if (isExist != null)
             {
                 if (isExist.UserName != User.Identity.Name)
@@ -291,11 +290,11 @@ namespace Asp.net_E_commerce.Controllers
             }
 
             bool changePassword = false;
-            if (NewPassword != null)
+            if (userEditProfile.NewPassword != null)
             {
-                if (NewPassword == ConfirmPassword)
+                if (userEditProfile.NewPassword == userEditProfile.ConfirmPassword)
                 {
-                    var singInResult = await _signInManager.PasswordSignInAsync(dbUser, Password, true, true);
+                    var singInResult = await _signInManager.PasswordSignInAsync(dbUser, userEditProfile.Password, true, true);
 
                     if (!singInResult.Succeeded)
                     {
@@ -311,18 +310,18 @@ namespace Asp.net_E_commerce.Controllers
                 changePassword = true;
             }
 
-            dbUser.FullName = FirstName + " " + LastName;
-            dbUser.Email = Email;
-            dbUser.Gender = Gender;
+            dbUser.FullName = userEditProfile.FirstName + " " + userEditProfile.LastName;
+            dbUser.Email = userEditProfile.Email;
+            dbUser.Gender = userEditProfile.Gender;
 
             dbUser.Avatar = fileName;
 
             if (changePassword == true)
             {
                 await _userManager.RemovePasswordAsync(dbUser);
-                await _userManager.AddPasswordAsync(dbUser, NewPassword);
+                await _userManager.AddPasswordAsync(dbUser, userEditProfile.NewPassword);
             }
-            await  _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Account");
         }
 
@@ -387,7 +386,7 @@ namespace Asp.net_E_commerce.Controllers
                     smtp.EnableSsl = true;
                     smtp.Send(mail);
                 }
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -427,7 +426,7 @@ namespace Asp.net_E_commerce.Controllers
             await _signInManager.PasswordSignInAsync(user, model.Password, true, true);
 
             TempData["ResponsResetPassword"] = "Your password has been successfully changed";
-            return RedirectToAction("Index","Account");
+            return RedirectToAction("Index", "Account");
         }
     }
 }

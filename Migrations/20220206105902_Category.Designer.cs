@@ -4,14 +4,16 @@ using Asp.net_E_commerce.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Asp.net_E_commerce.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220206105902_Category")]
+    partial class Category
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,21 +104,6 @@ namespace Asp.net_E_commerce.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Asp.net_E_commerce.Models.Brand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("brands");
-                });
-
             modelBuilder.Entity("Asp.net_E_commerce.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -126,9 +113,6 @@ namespace Asp.net_E_commerce.Migrations
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsFatured")
                         .HasColumnType("bit");
@@ -148,31 +132,6 @@ namespace Asp.net_E_commerce.Migrations
                     b.HasIndex("MainCategoryId");
 
                     b.ToTable("categories");
-                });
-
-            modelBuilder.Entity("Asp.net_E_commerce.Models.CategoryBrand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BarndId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BrandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BrandId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("categoryBrands");
                 });
 
             modelBuilder.Entity("Asp.net_E_commerce.Models.ContactDetails", b =>
@@ -422,19 +381,6 @@ namespace Asp.net_E_commerce.Migrations
                     b.HasOne("Asp.net_E_commerce.Models.Category", "MainCategory")
                         .WithMany("SubCategory")
                         .HasForeignKey("MainCategoryId");
-                });
-
-            modelBuilder.Entity("Asp.net_E_commerce.Models.CategoryBrand", b =>
-                {
-                    b.HasOne("Asp.net_E_commerce.Models.Brand", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId");
-
-                    b.HasOne("Asp.net_E_commerce.Models.Category", "Category")
-                        .WithMany("categoryBrands")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
