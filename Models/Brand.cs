@@ -9,6 +9,6 @@ namespace Asp.net_E_commerce.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        List<CategoryBrand> categoryBrands { get; set; }
+        public List<CategoryBrand> categoryBrands { get; set; }
     }
 }

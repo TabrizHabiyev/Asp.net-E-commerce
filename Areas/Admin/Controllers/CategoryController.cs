@@ -190,10 +190,10 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
                 }
                 string fileName = await category.Photo.SaveImageAsync(_env.WebRootPath, "/assets/images/category/");
                 newCategory.IsFatured = category.IsFatured;
-                newCategory.Name = category.Name;
                 newCategory.ImageUrl = fileName;
 
             }
+            newCategory.Name = category.Name;
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
