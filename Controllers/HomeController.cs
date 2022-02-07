@@ -29,7 +29,9 @@ namespace Asp.net_E_commerce.Controllers
 
             ViewData["SliderCompany"] = slider;
             ViewData["FeaturesBanner"] = banners;
-            return View();
+            List<Category> categories = _context.categories.Where(c => c.IsFatured == true).ToList();
+
+            return View(categories);
         }
 
         public IActionResult Privacy()
