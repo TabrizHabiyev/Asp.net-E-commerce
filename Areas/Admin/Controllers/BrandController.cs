@@ -167,12 +167,11 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
                 CategoryBrand DeleteBrand = await _context.categoryBrands.FirstOrDefaultAsync(c=>c.BrandId == brand.Id);
                 if (DeleteBrand !=null)
                 {
-
+                    _context.categoryBrands.Remove(DeleteBrand);
+                    await _context.SaveChangesAsync();
                 }
-                _context.categoryBrands.Remove(DeleteBrand);
-                await _context.SaveChangesAsync();
+             
             }
-
             _context.brands.Remove(brand);
             await _context.SaveChangesAsync();
 

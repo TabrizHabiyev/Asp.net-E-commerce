@@ -60,8 +60,6 @@
     <!--====== Newsletter Part Start ======-->
     @await Component.InvokeAsync("Subscribe")
     <!--====== Newsletter Part Ends ======-->
-
-
     <!--====== Footer Part Start ======-->
     @await Component.InvokeAsync("Footer")
     <!--====== Footer Part Ends ======-->
@@ -86,9 +84,8 @@
     <!-- <script src="assets/js/plugins.min.js"></script> -->
     <!--====== Main Activation js ======-->
     <script src="~/assets/js/main.js"></script>
+    @RenderSection("UserEditProfileScripts", false);
 </body>
-
-
 <!-- Mirrored from demo.hasthemes.com/allup/allup/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 04 Sep 2020 10:47:43 GMT -->
 </html>
 

@@ -44,18 +44,14 @@
             </div>
             <div class="col-xl-8 col-md-8">
                 <div class="tab-content my-account-tab mt-30" id="pills-tabContent">
-                    @if (TempData["ResponsResetPassword"] != null)
-                    {
-                    <div class="alert alert-success">@TempData["ResponsResetPassword"]</div>
-                    }
                     <div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard-tab">
                         <div class="my-account-dashboard account-wrapper">
                             <div class="text-center">
-                                <img src="~/@Model.Avatar" alt="@Model.FullName" class="rounded" style="width: 150px !important; height: 150px !important; border-radius: 50%;">
+                                <img class="UserAvatar rounded" src="~/@Model.Avatar" alt="@Model.FullName"  style="width: 150px !important; height: 150px !important; border-radius: 50%;">
                             </div>
                             <h4 class="account-title">Dashboard</h4>
                             <div class="welcome-dashboard">
-                                <p>Hello, <strong>@Model.FullName</strong> (If Not <strong>Tuntuni !</strong> <a href="#">Logout</a> )</p>
+                                <p>Hello, <strong class="UserFullName">@Model.FullName</strong> (If Not <strong>Tuntuni !</strong> <a href="#">Logout</a> )</p>
                             </div>
                             <p class="mt-25">From your account dashboard. you can easily check & view your recent orders, manage your shipping and billing addresses and edit your password and account details.</p>
                         </div>
@@ -162,30 +158,30 @@
                                 var Name = Fullname.Split(' ');
                             }
 
-
                             <div class="text-center">
-                                <img src="~/@Model.Avatar" alt="@Model.FullName" class="rounded" style="width: 150px !important; height: 150px !important; border-radius: 50%;">
+                                <img class="UserAvatar rounded" src="~/@Model.Avatar" alt="@Model.FullName" style="width: 150px !important; height: 150px !important; border-radius: 50%;">
                             </div>
-
-                            <a asp-controller="Account" asp-action="DeleteFoto" class="btn btn-danger">Delete Foto</a>
-
+                            @if (Model.Avatar != "assets/images/Avatar/woman.png" && Model.Avatar != "assets/images/Avatar/man.png")
+                            { 
+                                <a asp-controller="Account" id="fotoDeleteButton" asp-action="DeleteFoto" class="btn btn-danger">Delete Foto</a>
+                            }
                             <div class="account-details">
-                                <form asp-controller="Account" asp-action="Edit" method="Post" enctype="multipart/form-data">
+                                <form class="edit-profile" method="Post" enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <h6>Update Your Photo</h6>
                                             <div class="single-form">
-                                                <input type="file" name="photo" accept="image/png, image/gif, image/jpeg">
+                                                <input id="Foto" type="file" name="Photo" accept="image/png, image/gif, image/jpeg">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="single-form">
-                                                <input name="FirstName" value="@Name[0]" type="text" placeholder="First Name">
+                                                <input name="FirstName" id="FirstName" value="@Name[0]" type="text" placeholder="First Name">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="single-form">
-                                                <input name="LastName" value="@Name[1]" type="text" placeholder="Last Name">
+                                                <input name="LastName" id="LastName" value="@Name[1]" type="text" placeholder="Last Name">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -195,12 +191,12 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="single-form">
-                                                <input name="Email" value="@Model.Email" type="email" placeholder="Email address">
+                                                <input name="Email" id="Email" value="@Model.Email" type="email" placeholder="Email address">
                                             </div>
                                         </div>
                                         <div class="single-form">
                                             <label>Gender</label>
-                                            <select asp-for="Gender">
+                                            <select id="Gender" asp-for="Gender">
                                                 <option value="Woman">Woman</option>
                                                 <option value="Man">Man</option>
                                             </select>
@@ -212,12 +208,12 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="single-form">
-                                                <input type="password" name="Password" placeholder="Current Password">
+                                                <input type="password" id="Password" name="Password" placeholder="Current Password">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="single-form">
-                                                <input type="password" name="NewPassword" placeholder="New Password">
+                                                <input type="password" id="NewPassword" name="NewPassword" placeholder="New Password">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -241,3 +237,54 @@
     </div>
 </section>
 <!--====== My Account Part Ends ======-->
+
+@section UserEditProfileScripts{
+    <link href="~/lib/limonte-sweetalert2/sweetalert2.css" rel="stylesheet" />
+    <script src="~/axios/axios.js"></script>
+    <script src="~/lib/limonte-sweetalert2/sweetalert2.js"></script>
+    <script>
+            $(".edit-profile").submit(function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                axios.post('/Account/Edit',formData)
+                    .then(function (response) {
+                        if (response.data.match("/assets/")) {
+                            $(".UserAvatar").attr("src", response.data)
+                            if (response.data == "/assets/images/Avatar/woman.png" || response.data == "/assets/images/Avatar/man.png") {
+                                $("#fotoDeleteButton").hide();
+                            } else {
+                                $("#fotoDeleteButton").show();
+                            }
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Your profile details have been successfully updated',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: `${response.data}`,
+                            })
+                        }
+                    }).catch(error => {
+                        console.error('There was an error Tabriz!', error);
+                    });
+            })
+
+
+        $("#fotoDeleteButton").click(function (e) {
+            e.preventDefault();
+            axios.get('/Account/DeleteFoto')
+                .then(function (response) {
+                    $(".UserAvatar").attr("src", response.data)
+                        $("#fotoDeleteButton").hide();
+                }).catch(error => {
+                    console.error('There was an error Tabriz!', error);
+                });
+        })
+    </script>
+}

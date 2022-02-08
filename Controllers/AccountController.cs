@@ -250,31 +250,34 @@ namespace Asp.net_E_commerce.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction("Index", "Account");
+            return Ok($"/{dbUser.Avatar}");
         }
 
 
         [HttpPost]
-        [AutoValidateAntiforgeryToken]
+
         public async Task<IActionResult> Edit([FromForm] UserEditProfile userEditProfile)
         {
 
             AppUser dbUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            string fileName = (userEditProfile.Gender == "Woman") ? "assets/images/Avatar/woman.png" : "assets/images/Avatar/man.png";
-
-            if (userEditProfile.photo != null)
+            
+            string fileName = dbUser.Avatar;
+            if (dbUser.Avatar == "assets/images/Avatar/woman.png" || dbUser.Avatar == "assets/images/Avatar/man.png")
             {
-                if (!userEditProfile.photo.IsImage())
+                fileName = (userEditProfile.Gender == "Woman") ? "assets/images/Avatar/woman.png" : "assets/images/Avatar/man.png";
+            }
+
+            if (userEditProfile.Photo != null)
+            {
+                if (!userEditProfile.Photo.IsImage())
                 {
-                    ViewData["ResponsError"] = "Only image";
-                    return RedirectToAction("Index", "Account");
+                   return Ok("Only image");
                 }
-                if (userEditProfile.photo.IsCorrectSize(3000))
+                if (userEditProfile.Photo.IsCorrectSize(3000))
                 {
-                    ViewData["ResponsError"] = "Photo can be max 15mb";
-                    return RedirectToAction("Index", "Account");
+                   return Ok("Photo can be max 15mb");
                 }
-                fileName = "assets/images/Avatar/" + await userEditProfile.photo.SaveImageAsync(_env.WebRootPath, "assets/images/Avatar/");
+                fileName = "assets/images/Avatar/" + await userEditProfile.Photo.SaveImageAsync(_env.WebRootPath, "assets/images/Avatar/");
             }
 
 
@@ -283,10 +286,8 @@ namespace Asp.net_E_commerce.Controllers
             {
                 if (isExist.UserName != User.Identity.Name)
                 {
-                    ViewData["ResponsError"] = "This Email address is available";
-                    return RedirectToAction("Index", "Account");
+                   return Ok("This Email address is available");
                 }
-
             }
 
             bool changePassword = false;
@@ -298,14 +299,12 @@ namespace Asp.net_E_commerce.Controllers
 
                     if (!singInResult.Succeeded)
                     {
-                        ViewData["ResponsError"] = "Old password is not correct";
-                        return RedirectToAction("Index", "Account");
+                       return Ok("Old password is not correct");
                     }
                 }
                 else
                 {
-                    ViewData["ResponsError"] = "New passwords do not match";
-                    return RedirectToAction("Index", "Account");
+                    return Ok("New passwords do not match");
                 }
                 changePassword = true;
             }
@@ -322,7 +321,8 @@ namespace Asp.net_E_commerce.Controllers
                 await _userManager.AddPasswordAsync(dbUser, userEditProfile.NewPassword);
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Account");
+
+            return Ok($"/{fileName}");
         }
 
         public async Task<IActionResult> LogOut()
