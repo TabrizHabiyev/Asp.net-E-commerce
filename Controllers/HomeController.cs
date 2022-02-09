@@ -1,7 +1,9 @@
 ﻿using Asp.net_E_commerce.DAL;
 using Asp.net_E_commerce.Models;
+using Asp.net_E_commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -27,11 +29,18 @@ namespace Asp.net_E_commerce.Controllers
             List<SliderCompany> slider = _context.sliderCompany.ToList();
             List<FeaturesBanner> banners = _context.featuresBanners.ToList();
 
+
             ViewData["SliderCompany"] = slider;
             ViewData["FeaturesBanner"] = banners;
-            List<Category> categories = _context.categories.Where(c => c.IsFatured == true).ToList();
 
-            return View(categories);
+            List<Category> categories = _context.categories.Where(c => c.IsFatured == true).ToList();
+            List<HomeProductSlider> homeProductSliders = _context.homeProductSliders.Include(x => x.Product).ToList();
+
+            HomeVM homeVm = new HomeVM();
+            homeVm.Categories = categories;
+            homeVm.Sliders = homeProductSliders;
+
+            return View(homeVm);
         }
 
         public IActionResult Privacy()

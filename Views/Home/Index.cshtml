@@ -1,4 +1,27 @@
-﻿@model List<Category>
+﻿@model HomeVM
+<!--====== Slider Part Start ======-->
+<section class="slider-area slider-active">
+        @foreach (var item in Model.Sliders)
+        {
+            <div class="single-slider">
+                <div class="slider-image">
+                    <img src="~/assets/images/product/@item.ImageUrl" alt="slider">
+                </div>
+                <div class="slider-content-wrapper">
+                    <div class="container-fluid custom-container">
+                        <div class="slider-content">
+                            <h4 data-animation="fadeInDown" data-delay="0.5s" class="sub-title">@item.Title</h4>
+                            <h1 data-animation="fadeInLeft" data-delay="0.5s" class="main-title "><span>@item.Description </span>@item.Product.Name</h1>
+                            <p data-animation="fadeInRightBig" data-delay="0.5s">@item.Product.Description</p>
+                            <a data-animation="zoomIn" data-delay="0.5s" class="main-btn " asp-controller="Product" asp-action="Detail" asp-route-id="@item.Product.Id">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        }
+    </section>
+<!--====== Slider Part Ends ======-->
+
 <!--====== Category Part Start ======-->
 <section class="category-area category-bg pt-100 pb-100">
     <div class="container-fluid custom-container">
@@ -12,7 +35,7 @@
         @{ int count = 1;}
         <div class="row category-active">
             <div class="col-lg-2">
-                @foreach (var item in Model)
+                @foreach (var item in Model.Categories)
                 {
                     <div class="single-category text-center">
                         <a target="_blank" href="shop-left-sidebar.html">
@@ -20,7 +43,7 @@
                             <p>@item.Name</p>
                         </a>
                     </div> <!-- single category -->
-                    if (count % 2 == 0 && count != Model.Count)
+                    if (count % 2 == 0 && count != Model.Categories.Count())
                     {
                         @Html.Raw("</div>");
                         @Html.Raw("<div class=`col-lg-2`>");
