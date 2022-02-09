@@ -22,5 +22,16 @@ namespace Asp.net_E_commerce.DAL
         public DbSet<Category> categories { get; set; }
         public DbSet<Brand> brands { get; set; }
         public DbSet<CategoryBrand> categoryBrands { get; set; }
+        public DbSet<Product> products { get; set; }
+        public DbSet<Campaign> campaigns { get; set; }
+        public DbSet<ProductPhoto> productPhotos { get; set; }
+        public DbSet<Color> colors { get; set; }
+        public DbSet<ColorProduct> colorProducts { get; set; }
+        public DbSet<Tag> tags { get; set; }
+        public DbSet<ProductTag> productTags { get; set; }
+        public DbSet<ProductRelation> productRelations { get; set; }
+        public DbSet<HomeProductSlider> homeProductSliders { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogPhoto> BlogPhotos { get; set; }
     }
 }
