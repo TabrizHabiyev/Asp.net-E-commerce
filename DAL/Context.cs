@@ -33,5 +33,6 @@ namespace Asp.net_E_commerce.DAL
         public DbSet<HomeProductSlider> homeProductSliders { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogPhoto> BlogPhotos { get; set; }
+        public DbSet<Comment> comments { get; set; }
     }
 }

@@ -55,7 +55,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
         // POST: BlogController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Blog blog, string desc, string videourl)
+        public async Task<ActionResult> Create(Blog blog, string videourl)
         {
             if (blog.Photos == null && videourl == null) return NotFound();
             Blog newBlog = new Blog()

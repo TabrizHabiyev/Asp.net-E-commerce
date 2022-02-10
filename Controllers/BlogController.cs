@@ -33,8 +33,14 @@ namespace Asp.net_E_commerce.Controllers
         }
         public async Task<IActionResult> Detail(int? id)
         {
-            var blog =await _context.Blogs.Include(x => x.BlogPhotos).FirstOrDefaultAsync(x => x.Id == id);
+            List<Comment> comments = await _context.comments.Where(c => c.BlogId == id).Include(x => x.User).ToListAsync();
 
+            var blog = await _context.Blogs.Include(x => x.BlogPhotos).FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _userManager.FindByIdAsync(blog.UserId);
+            var tags = await _context.productTags.Where(p => p.ProductId == blog.ProductId).Select(t => t.Tag).ToListAsync();
+            ViewBag.user = user.FullName;
+            ViewBag.tags = tags;
+            ViewBag.comment = comments;
             return View(blog);
         }
     }
