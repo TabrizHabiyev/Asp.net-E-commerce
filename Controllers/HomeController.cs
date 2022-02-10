@@ -29,9 +29,15 @@ namespace Asp.net_E_commerce.Controllers
             List<SliderCompany> slider = _context.sliderCompany.ToList();
             List<FeaturesBanner> banners = _context.featuresBanners.ToList();
 
+            //Get new arrive
+            List<Product> products = _context.products.Include(p => p.Campaign).Include(p => p.productPhotos).Include(p => p.Brand).ToList();
+
 
             ViewData["SliderCompany"] = slider;
             ViewData["FeaturesBanner"] = banners;
+
+
+            List<Blog> blogs =  _context.Blogs.Include(x => x.BlogPhotos).OrderByDescending(x => x.Id).Take(10).ToList();
 
             List<Category> categories = _context.categories.Where(c => c.IsFatured == true).ToList();
             List<HomeProductSlider> homeProductSliders = _context.homeProductSliders.Include(x => x.Product).ToList();
@@ -39,6 +45,11 @@ namespace Asp.net_E_commerce.Controllers
             HomeVM homeVm = new HomeVM();
             homeVm.Categories = categories;
             homeVm.Sliders = homeProductSliders;
+
+            homeVm.blogSlider = blogs;
+
+            ViewBag.newarrive = products.OrderByDescending(p => p.Id).Take(8).ToList();
+            ViewBag.Featured =  products.Where(x => x.Featured == true).OrderByDescending(x => x.Id).Take(8).ToList();
 
             return View(homeVm);
         }
