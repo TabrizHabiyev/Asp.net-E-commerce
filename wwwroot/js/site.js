@@ -1,4 +1,17 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(function () {
 
-// Write your JavaScript code.
+    //search
+    $(document).on("keyup", "#input-search", function () {
+        let search = $("#input-search").val().trim();
+        $("#blog-search .single-mini-post").slice(0).remove();
+        if (search.length > 0) {
+            $.ajax({
+                url: "/blog/search?search=" + search,
+                type: "get",
+                success: function (res) {
+                    $("#blog-search").append(res);
+                }
+            })
+        }
+    })
+})

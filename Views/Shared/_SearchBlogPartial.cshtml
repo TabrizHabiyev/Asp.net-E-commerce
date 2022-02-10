@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Blog>
+
+
+@foreach (var item in Model)
+{
+    <div class="single-mini-post d-flex">
+        @if (item.BlogPhotos[0].PhotoUrl != null)
+        {
+            <div class="post-thumb">
+                <a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id"><img src="~/assets/images/blog/@item.BlogPhotos[0].PhotoUrl" alt="blog"></a>
+            </div>
+        }
+        else if (item.BlogPhotos[0].VideoUrl != null)
+        {
+            <div class="post-thumb">
+                <a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id"> <iframe src="@item.BlogPhotos[0].VideoUrl" width="50" height="50" allow="autoplay; encrypted-media" allowfullscreen=""></iframe></a>
+            </div>
+        }
+        <div class="post-content media-body">
+            <h5 class="post-title"><a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id">This is Secound Post For XipBlog</a></h5>
+            <span class="date">@item.Date</span>
+        </div>
+    </div>
+}

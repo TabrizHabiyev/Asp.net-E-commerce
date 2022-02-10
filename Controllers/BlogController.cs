@@ -35,13 +35,39 @@ namespace Asp.net_E_commerce.Controllers
         {
             List<Comment> comments = await _context.comments.Where(c => c.BlogId == id).Include(x => x.User).ToListAsync();
 
-            var blog = await _context.Blogs.Include(x => x.BlogPhotos).FirstOrDefaultAsync(x => x.Id == id);
-            var user = await _userManager.FindByIdAsync(blog.UserId);
+            var blog = await _context.Blogs.Include(x => x.BlogPhotos).Include(x=>x.User).FirstOrDefaultAsync(x => x.Id == id);
+
+
             var tags = await _context.productTags.Where(p => p.ProductId == blog.ProductId).Select(t => t.Tag).ToListAsync();
-            ViewBag.user = user.FullName;
+
+
+
+            // Relatet Post
+             List<Blog> relatedPost = await _context.Blogs.Include(x=>x.BlogPhotos)
+            .Where(x => x.ProductId == blog.ProductId)
+            .OrderByDescending(x => x.Id)
+            .Take(3)
+            .ToListAsync();
+
+            // RESENT POST
+            List<Blog> resentPost = await _context.Blogs.Include(x=>x.BlogPhotos).OrderByDescending(x=>x.Id).Take(4).ToListAsync();
+
+            ViewBag.resentPost = resentPost;
+            ViewBag.relatedPost = relatedPost;
             ViewBag.tags = tags;
             ViewBag.comment = comments;
             return View(blog);
+        }
+
+        public async Task<IActionResult> Search(string search)
+        {
+            IEnumerable<Blog> blogs = await _context.Blogs
+                .Include(c => c.BlogPhotos)
+                .Where(p => p.Title.ToLower().Contains(search.ToLower()))
+                .Take(7)
+                .ToListAsync();
+
+            return PartialView("_SearchBlogPartial", blogs);
         }
     }
 }

@@ -31,7 +31,7 @@
                                                     if (element.BlogId == item.Id && element.PhotoUrl != null)
                                                     {
                                                         <div class="gallery-item">
-                                                            <a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id"><img src="assets/images/blog/@element.PhotoUrl" alt="blog"></a>
+                                                            <a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id"><img src="~/assets/images/blog/@element.PhotoUrl" alt="blog"></a>
                                                         </div>
                                                     }
                                                     if (element.BlogId == item.Id && element.VideoUrl != null)

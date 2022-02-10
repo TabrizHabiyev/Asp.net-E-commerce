@@ -19,8 +19,6 @@ namespace Asp.net_E_commerce.Controllers
             _context = context;
         }
 
-
-
         // POST: CommentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

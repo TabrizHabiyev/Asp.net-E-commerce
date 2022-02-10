@@ -49,7 +49,7 @@
                     <div class="blog-single-content">
                         <h4 class="blog-title">@Model.Title</h4>
                         <ul class="blog-meta">
-                            <li><a href="#"><i class="fas fa-user-circle"></i>@ViewBag.user</a></li>
+                            <li><a href="#"><i class="fas fa-user-circle"></i>@Model.User.FullName</a></li>
                             <li><a href="#"><i class="fas fa-calendar-alt"></i><time datetime="@Model.Date"></time></a></li>
                         </ul>
                         <p> @Html.Raw(Model.Description)</p>
@@ -80,54 +80,37 @@
                         <h2 class="title">Related Post</h2>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="single-blog-post blog-grid-post related-post mt-30">
-                                <div class="blog-post-media">
-                                    <div class="blog-image">
-                                        <a href="blog-single-left-sidebar.html"><img src="assets/images/blog-2.jpg" alt="blog"></a>
+
+
+                        @foreach (var item in ViewBag.relatedPost)
+                        {
+                            <div class="col-md-4">
+                                <div class="single-blog-post blog-grid-post related-post mt-30">
+                                    <div class="blog-post-media">
+                                        @if (item.BlogPhotos[0].PhotoUrl != null)
+                                        {
+                                            <div class="blog-image">
+                                                <a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id"><img src="~/assets/images/blog/@item.BlogPhotos[0].PhotoUrl" alt="blog"></a>
+                                            </div>
+                                        }
+                                        else if (item.BlogPhotos[0].VideoUrl != null)
+                                        {
+                                            <div class="blog-post-video">
+                                                <a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id"> <iframe src="@item.BlogPhotos[0].VideoUrl" allow="autoplay; encrypted-media" allowfullscreen="" width="221" height="163"></iframe></a>
+                                            </div>
+                                        }
                                     </div>
-                                </div>
-                                <div class="blog-post-content">
-                                    <h4 class="blog-title"><a href="blog-single-left-sidebar.html">This is Third Post For XipBlog</a></h4>
-                                    <ul class="blog-meta">
-                                        <li><a href="#"><i class="fas fa-user-circle"></i> Admin</a></li>
-                                        <li><a href="#"><i class="fas fa-calendar-alt"></i> 24 April, 2020</a></li>
-                                    </ul>
-                                </div>
-                            </div> <!-- single blog post -->
-                        </div>
-                        <div class="col-md-4">
-                            <div class="single-blog-post blog-grid-post related-post mt-30">
-                                <div class="blog-post-media">
-                                    <div class="blog-image">
-                                        <a href="blog-single-left-sidebar.html"><img src="assets/images/blog-3.jpg" alt="blog"></a>
+                                    <div class="blog-post-content">
+                                        <h4 class="blog-title"><a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id">This is Third Post For XipBlog</a></h4>
+                                        <ul class="blog-meta">
+                                            <li><a href="#"><i class="fas fa-user-circle"></i>@item.User.FullName</a></li>
+                                            <li><a href="#"><i class="fas fa-calendar-alt"></i>@item.Date</a></li>
+                                        </ul>
                                     </div>
-                                </div>
-                                <div class="blog-post-content">
-                                    <h4 class="blog-title"><a href="blog-single-left-sidebar.html">This is Third Post For XipBlog</a></h4>
-                                    <ul class="blog-meta">
-                                        <li><a href="#"><i class="fas fa-user-circle"></i> Admin</a></li>
-                                        <li><a href="#"><i class="fas fa-calendar-alt"></i> 24 April, 2020</a></li>
-                                    </ul>
-                                </div>
-                            </div> <!-- single blog post -->
-                        </div>
-                        <div class="col-md-4">
-                            <div class="single-blog-post blog-grid-post related-post mt-30">
-                                <div class="blog-post-media">
-                                    <div class="blog-image">
-                                        <a href="blog-single-left-sidebar.html"><img src="assets/images/blog-4.jpg" alt="blog"></a>
-                                    </div>
-                                </div>
-                                <div class="blog-post-content">
-                                    <h4 class="blog-title"><a href="blog-single-left-sidebar.html">This is Third Post For XipBlog</a></h4>
-                                    <ul class="blog-meta">
-                                        <li><a href="#"><i class="fas fa-user-circle"></i> Admin</a></li>
-                                        <li><a href="#"><i class="fas fa-calendar-alt"></i> 24 April, 2020</a></li>
-                                    </ul>
-                                </div>
-                            </div> <!-- single blog post -->
-                        </div>
+                                </div> <!-- single blog post -->
+                            </div>
+                        }
+
                     </div>
                 </div>
                 <div class="blog-single-comment">
@@ -188,11 +171,14 @@
                 <div class="blog-sidebar">
                     <div class="sidebar-widget mt-30">
                         <h4 class="sidebar-title">Search</h4>
-                        <div class="blog-sidebar-search">
+                        <div class="blog-sidebar-search" >
                             <form action="#">
-                                <input type="text" placeholder="Search">
+                                <input type="text" id="input-search" placeholder="Search">
                                 <button><i class="fas fa-search"></i></button>
                             </form>
+                                <div class="blog-sidebar-post"  id="blog-search">
+
+                                </div>
                         </div>
                     </div> <!-- sidebar widget -->
 
@@ -214,42 +200,29 @@
                     <div class="sidebar-widget mt-30">
                         <h4 class="sidebar-title">Resent Post</h4>
                         <div class="blog-sidebar-post">
-                            <div class="single-mini-post d-flex">
-                                <div class="post-thumb">
-                                    <a href="blog-single-left-sidebar.html"><img src="assets/images/blog-1.jpg" alt="blog"></a>
+
+                            @foreach (var item in ViewBag.resentPost)
+                            {
+                                <div class="single-mini-post d-flex">
+                                    @if (item.BlogPhotos[0].PhotoUrl != null)
+                                    {
+                                        <div class="post-thumb">
+                                            <a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id"><img src="~/assets/images/blog/@item.BlogPhotos[0].PhotoUrl" alt="blog"></a>
+                                        </div>
+                                    }
+                                    else if (item.BlogPhotos[0].VideoUrl != null)
+                                    {
+                                        <div class="post-thumb">
+                                            <a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id"> <iframe src="@item.BlogPhotos[0].VideoUrl" width="50" height="50" allow="autoplay; encrypted-media" allowfullscreen=""></iframe></a>
+                                        </div>
+                                    }
+                                    <div class="post-content media-body">
+                                        <h5 class="post-title"><a asp-controller="Blog" asp-action="Detail" asp-route-id="@item.Id">This is Secound Post For XipBlog</a></h5>
+                                        <span class="date">@item.Date</span>
+                                    </div>
                                 </div>
-                                <div class="post-content media-body">
-                                    <h5 class="post-title"><a href="blog-single-left-sidebar.html">This is Secound Post For XipBlog</a></h5>
-                                    <span class="date">April 24, 2020</span>
-                                </div>
-                            </div>
-                            <div class="single-mini-post d-flex">
-                                <div class="post-thumb">
-                                    <a href="blog-single-left-sidebar.html"><img src="assets/images/blog-2.jpg" alt="blog"></a>
-                                </div>
-                                <div class="post-content media-body">
-                                    <h5 class="post-title"><a href="blog-single-left-sidebar.html">This is Secound Post For XipBlog</a></h5>
-                                    <span class="date">April 24, 2020</span>
-                                </div>
-                            </div>
-                            <div class="single-mini-post d-flex">
-                                <div class="post-thumb">
-                                    <a href="blog-single-left-sidebar.html"><img src="assets/images/blog-3.jpg" alt="blog"></a>
-                                </div>
-                                <div class="post-content media-body">
-                                    <h5 class="post-title"><a href="blog-single-left-sidebar.html">This is Secound Post For XipBlog</a></h5>
-                                    <span class="date">April 24, 2020</span>
-                                </div>
-                            </div>
-                            <div class="single-mini-post d-flex">
-                                <div class="post-thumb">
-                                    <a href="blog-single-left-sidebar.html"><img src="assets/images/blog-4.jpg" alt="blog"></a>
-                                </div>
-                                <div class="post-content media-body">
-                                    <h5 class="post-title"><a href="blog-single-left-sidebar.html">This is Secound Post For XipBlog</a></h5>
-                                    <span class="date">April 24, 2020</span>
-                                </div>
-                            </div>
+                            }
+
                         </div>
                     </div> <!-- sidebar widget -->
 
@@ -273,3 +246,8 @@
     </div> <!-- container -->
 </section>
 <!--====== Blog Part Ends ======-->
+
+
+@section Scripts {
+     <script src="~/js/site.js"></script>
+}
