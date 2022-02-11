@@ -172,7 +172,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
                 }
              
             }
-            _context.brands.Remove(brand);
+            _context.brands.Remove(_brand);
             await _context.SaveChangesAsync();
 
             return View();

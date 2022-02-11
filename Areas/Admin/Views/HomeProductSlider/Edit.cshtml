@@ -10,7 +10,7 @@
             </p>
            
             <form class="forms-sample" asp-controller="HomeProductSlider" asp-action="Edit" enctype="multipart/form-data">
-                @*<img src="~/assets/images/product/@if (Model.ImageUrl != null){@Model.ImageUrl}" class="img-fluid" alt="Responsive image">*@
+                <img src="~/assets/images/product/@Model.ImageUrl" class="img-fluid" alt="Responsive image">
                 <div class="form-group">
                     <label for="exampleInputName1">Select Product</label>
                     <div class="container parent">

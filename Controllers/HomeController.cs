@@ -54,7 +54,7 @@ namespace Asp.net_E_commerce.Controllers
             return View(homeVm);
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
         }

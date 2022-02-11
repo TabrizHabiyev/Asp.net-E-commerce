@@ -157,6 +157,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
             if (isExist && !(newCategory.Name.ToLower() == category.Name.ToLower().Trim()))
             {
                 ModelState.AddModelError("Name", "Bu adla Category var");
+                await _context.SaveChangesAsync();
                 return View();
             };
 
@@ -165,6 +166,7 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
                 newCategory.MainCategory =await _context.categories.FindAsync(category.MainCategory.Id);
                 newCategory.Name = category.Name;
 
+                return View();
             }
             if (category.Photo != null)
             {
@@ -189,11 +191,11 @@ namespace Asp.net_E_commerce.Areas.Admin.Controllers
                     System.IO.File.Delete(path);
                 }
                 string fileName = await category.Photo.SaveImageAsync(_env.WebRootPath, "/assets/images/category/");
-                newCategory.IsFatured = category.IsFatured;
                 newCategory.ImageUrl = fileName;
 
             }
             newCategory.Name = category.Name;
+            newCategory.IsFatured = category.IsFatured;
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
